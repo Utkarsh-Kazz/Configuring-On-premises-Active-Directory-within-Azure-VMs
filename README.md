@@ -131,75 +131,46 @@ Next, I installed Active Directory Domain Services on DC-1 and promoted it to a 
 <h3 align="center">Join Client-1 to your domain (myadproject.com)</h3>
 <br />
 <p>
-  From the Azure Portal, set Client-1’s DNS settings to the DC’s Private IP address:
-</p>
+From the Azure portal, I changed Client-1's DNS settings to point to DC-1’s private IP address and restarted the VM.</p>
 <p>
   <img src="https://i.imgur.com/1KRsjI6.png" height="75%" width="100%" alt="client dns settings"/>
 </p>
 <p>
-  From the Azure Portal, restart Client-1.
-</p>
-<p>
-  Login to Client-1 (Remote Desktop) as the original local admin (labuser) and join it to the domain (computer will restart):
+  I then logged into Client-1 as the local admin and joined the computer to the domain mydomain.com.
 </p>
 <p>
   <img src="https://i.imgur.com/50wszcP.png" height="75%" width="100%" alt="domain joining"/>
 </p>
 <p>
-  Login to the Domain Controller (Remote Desktop) and verify Client-1 shows up in Active Directory Users and Computers (ADUC) inside the “Computers” container on the root of the domain.
-</p>
-<p>
-  Create a new OU named “_CLIENTS” and drag Client-1 into there:
+  After the machine restarted, I logged into DC-1 and confirmed in ADUC that Client-1 appeared under the “Computers” container, then moved it into the _CLIENTS OU after creating it.
 </p>
 <p>
   <img src="https://i.imgur.com/vB1n9m0.png" height="75%" width="100%" alt="active directory client verification"/>
 </p>
 <br />
 <br />
-<h3 align="center">Setup Remote Desktop for non-administrative users on Client-1</h3>
+<h3 align="center">Enable Remote Desktop Access for Domain Users</h3>
 <br />
 <p>
-  Log into Client-1 as mydomain.com\jane_admin and open system properties.
-</p>
-<p>
-  Click “Remote Desktop”.
-</p>
-<p>
-  Allow “domain users” access to remote desktop.
-</p>
-<p>
-  You can now log into Client-1 as a normal, non-administrative user now.
-</p>
-<p>
-  Normally you’d want to do this with Group Policy that allows you to change MANY systems at once (maybe a future lab):
-</p>
+  While logged into Client-1 as jane_admin, I opened the system settings and enabled Remote Desktop. I then granted the “Domain Users” group permission to access the machine remotely, allowing standard users to log in via RDP. This could also be automated using Group Policy for larger environments.
 <p>
   <img src="https://i.imgur.com/8BfpT3s.png" height="75%" width="100%" alt="remote desktop setup"/>
 </p>
 <br />
 <br />
-<h3 align="center">Create a bunch of additional users and attempt to log into client-1 with one of the users</h3>
+<h3 align="center">Bulk Create Users and Configure Lockout Policy</h3>
 <br />
 <p>
-  Login to DC-1 as jane_admin
-</p>
-<p>
-  Open PowerShell_ise as an administrator.
-</p> 
-<p>  
-  Create a new File and paste the contents of this script (https://github.com/Xinloiazn/configure-ad/blob/main/adscript.ps1) into it:
+ Back on DC-1, I opened PowerShell ISE as an administrator and ran a script to automatically generate 10,000 user accounts inside the _EMPLOYEES OU.I tested account lockout by logging in with incorrect credentials multiple times, causing the account to be locked. I then reset the password and unlocked the account through ADUC. Finally, I modified the domain’s Group Policy settings to lock user accounts after 5 failed login attempts, with a 30-minute lockout duration. 
 </p>
 <p>
   <img src="https://i.imgur.com/0i8uApf.png" height="75%" width="100%" alt="create users script"/>
 </p>
 <p>
-  Run the script and observe the accounts being created:
-</p>
-<p>
   <img src="https://i.imgur.com/6QOGzs6.png" height="75%" width="100%" alt="observe create users script"/>
 </p>
 <p>
-  When finished, open ADUC and observe the accounts in the appropriate OU and attempt to log into Client-1 with one of the accounts (take note of the password in the script):
+After creating the users, I selected one account and attempted to log into Client-1 with it. The login was successful, confirming that the account was active and the domain environment was functioning as intended.
 </p>
 <p>
   <img src="https://i.imgur.com/ZZCfiCp.png" height="75%" width="100%" alt="employee user accounts"/>
@@ -209,11 +180,8 @@ Next, I installed Active Directory Domain Services on DC-1 and promoted it to a 
 <br />
 <br />
 <p>
-  I hope this tutorial helped you learn a little bit about network security protocols and observe traffic between virtual machines. This can be easily done on a PC or a Mac. Mac would just have an extra step to download the Remote Desktop App.
+This tutorial demonstrated how to deploy and configure a fully functional Active Directory environment using Azure Virtual Machines, simulating both cloud-based and traditional on-prem infrastructure. You built a secure, manageable environment complete with domain services, DNS settings, user provisioning, and group policy configuration.
+
+✅ Important: Be sure to clean up your Azure environment after finishing this lab. Close all Remote Desktop sessions, delete any unused Resource Groups, and confirm that all resources have been removed to prevent unnecessary charges.
 </p>
-<p>
-  Now that we're done, DON'T FORGET TO CLEAN UP YOUR AZURE ENVIRONMENT so that you don't incur unnecessary charges.
-</p>
-<p>
-  Close your Remote Desktop connection, delete the Resource Group(s) created at the beginning of this tutorial, and verify Resource Group deletion.
-</p>
+
