@@ -58,47 +58,44 @@ This tutorial outlines the implementation of on-premises Active Directory within
 <h3 align="center">Ensure Connectivity between the client and Domain Controller</h3>
 <br />
 <p>
-  Login to Client-1 with Remote Desktop and ping DC-1’s private IP address with ping -t <ip address> (perpetual ping):
+  To verify network connectivity, I logged into Client-1 using Remote Desktop and continuously pinged DC-1’s private IP using the ping -t command. 
 </p>
 <p>
   <img src="https://i.imgur.com/bnPM9tX.png" height="75%" width="100%" alt="perpetual ping"/>
 </p>
 <p>
-  Login to the Domain Controller and enable ICMPv4 in on the local windows firewall:
+ I then logged into DC-1 and enabled ICMPv4 (ping) through the local Windows Firewall.
 </p>
 <p>
   <img src="https://i.imgur.com/ZpPyEkt.png" height="75%" width="100%" alt="enable ICMPv4"/>
 </p>
 <p>
-  Check back at Client-1 to see the ping succeed:
+ I confirmed back on Client-1 that the ping was successful, indicating proper connectivity.
 </p>
 <p>
   <img src="https://i.imgur.com/8o3OfjY.png" height="75%" width="100%" alt="ping success"/>
 </p>
 <br />
 <br />
-<h3 align="center">Install Active Directory</h3>
+<h3 align="center">Installing Active Directory</h3>
 <br />
 <p>
-  Login to DC-1 and install Active Directory Domain Services:
+Next, I installed Active Directory Domain Services on DC-1 and promoted it to a Domain Controller by creating a new forest called mydomain.com (or myadproject.com).
 </p>
 <p>
   <img src="https://i.imgur.com/A1V9XJ5.png" height="75%" width="100%" alt="active directory install"/>
 </p>
 <p>
-  Promote as a Domain Controller:
+  Promoting it as a Domain Controller
 </p>
 <p>
   <img src="https://i.imgur.com/zi15fw4.png" height="75%" width="100%" alt="domain controller promotion"/>
 </p>
 <p>
-  Setup a new forest as myactivedirectory.com (can be anything, just remember what it is - I ultimately did set it up as myadproject.com which you'll see in the next pic):
-</p>
-<p>
   <img src="https://i.imgur.com/DCFUVrM.png" height="75%" width="100%" alt="set new forest"/>
 </p>
 <p>
-  Restart and then log back into DC-1 as user: myadproject.com\labuser:
+ After the system rebooted, I logged into DC-1 using the domain account mydomain.com\labuser.
 </p>
 <p>
   <img src="https://i.imgur.com/7UakWMQ.png" height="75%" width="100%" alt="fqdn login"/>
@@ -108,26 +105,23 @@ This tutorial outlines the implementation of on-premises Active Directory within
 <h3 align="center">Create an Admin and Normal User Account in AD</h3>
 <br />
 <p>
-  In Active Directory Users and Computers (ADUC), create an Organizational Unit (OU) called “_EMPLOYEES” and another one called "_ADMINS":
+ Inside Active Directory Users and Computers (ADUC), I created two Organizational Units (OUs): _EMPLOYEES and _ADMINS.
 </p>
 <p>
   <img src="https://i.imgur.com/cYmv0r7.png" height="75%" width="100%" alt="organizational unit"/>
   <img src="https://i.imgur.com/v02CBPI.png" height="75%" width="100%" alt="organizational unit"/>
 </p>
 <p>
-  Create a new employee named “Jane Doe” with the username of “jane_admin”:
+  I then created a new user named Jane Doe with the username jane_admin and added her to the “Domain Admins” security group. Afterward, I logged out and logged back into DC-1 using the new admin credentials mydomain.com\jane_admin
 </p>
 <p>
   <img src="https://i.imgur.com/h546E6L.png" height="75%" width="100%" alt="admin creation"/>
 </p>
 <p>
-  Add jane_admin to the “Domain Admins” Security Group:
-</p>
-<p>
   <img src="https://i.imgur.com/mnLwTgq.png" height="75%" width="100%" alt="security group"/>
 </p>
 <p>  
-  Log out/close the Remote Desktop connection to DC-1 and log back in as “myadproject.com\jane_admin”. Use jane_admin as your admin account from now on:
+ Afterward, I logged out and logged back into DC-1 using the new admin credentials mydomain.com\jane_admin
 </p>
 <p>
   <img src="https://i.imgur.com/xWZ4Kol.png" height="75%" width="100%" alt="admin login"/>
